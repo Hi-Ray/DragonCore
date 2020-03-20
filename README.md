@@ -21,7 +21,8 @@ Both Node and Go are required if you want to run the application directly. You c
 
 ### Development
 
-**Direct**&nbsp;
+**Direct**
+
 Clone the repository and enter it
 ```bash
 git clone https://github.com/CommunityDragon/DragonCore.git
@@ -45,7 +46,8 @@ yarn dev
 npm run dev
 ```
 
-**Docker**&nbsp;
+**Docker**
+
 All docker files are set up, all you need to do is start up the containers using docker-compose and the proper target file.
 ```bash
 docker-compose up -f docker-compose.dev.yml
