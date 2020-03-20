@@ -45,8 +45,6 @@ yarn dev
 npm run dev
 ```
 
-&nbsp;
-
 **Docker**&nbsp;
 All docker files are set up, all you need to do is start up the containers using docker-compose and the proper target file.
 ```bash
@@ -56,6 +54,8 @@ Or run it as a daemon
 ```bash
 docker-compose up -f docker-compose.dev.yml -d
 ```
+
+&nbsp;
 
 ### Production
 Everything on production is run through docker. Just use docker-compose to start up production
