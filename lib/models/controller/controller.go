@@ -19,6 +19,12 @@ const (
 	HEAD 		Method = http.MethodHead
 )
 
+type Controller interface {
+	Middleware(mw echo.MiddlewareFunc) *controller
+	Handler(method Method, path string, handle echo.HandlerFunc, mw ...echo.MiddlewareFunc) *controller
+	Register(e *echo.Echo)
+}
+
 // controller struct
 type controller struct {
 	prefix string

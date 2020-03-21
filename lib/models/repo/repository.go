@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"dragonback/lib/models/md"
 	"encoding/hex"
-	"fmt"
 	"gopkg.in/src-d/go-git.v4"
 	"os"
 	"path"
@@ -61,7 +60,6 @@ func (r *repository) Clone() (err error) {
 		}
 		return err
 	}
-	fmt.Println("im here")
 	<-c
 	return nil
 }
