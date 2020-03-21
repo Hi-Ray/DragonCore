@@ -1,15 +1,18 @@
 package main
 
 import (
-	"dragonback/controllers/api/content/docs"
-	"dragonback/controllers/api/home"
-	"dragonback/lib/constants/repositories"
-	"dragonback/lib/modules"
+	"dragonback/controllers/content/docs"
+	"dragonback/controllers/home"
+	"dragonback/lib/models/repo"
+	"fmt"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	modules.GitModule().EnsureRepo(repo.CDragonDocs)
+	err := repo.New(repo.CDragonDocs).Clone()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	e := echo.New()
 	home.Controller.Register(e)
