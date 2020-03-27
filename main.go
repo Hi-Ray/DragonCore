@@ -8,5 +8,5 @@ import (
 func main() {
 	e := echo.New()
 	modules.Bundler.Register(e)
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":80"))
 }

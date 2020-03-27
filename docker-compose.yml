@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  ## API
+  api:
+    build: build/dev/echo
+    volumes:
+      - .:/app
+    networks:
+      - core-web-dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.communitydragon.localhost`)"
+
+  ## FRONTEND
+  frontend:
+    build: build/dev/frontend
+    volumes:
+      - .:/app
+    networks:
+      - core-web-dev
+    labels:
+      - "traefik.enable=true"
+      # Redirect www
+      - "traefik.http.middlewares.www-redirect.redirectregex.regex=^http://communitydragon.localhost/(.*)"
+      - "traefik.http.middlewares.www-redirect.redirectregex.replacement=http://www.communitydragon.localhost/$${1}"
+      - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
+      # Main nuxt app
+      - "traefik.http.routers.frontend-main.rule=Host(`communitydragon.localhost`,`www.communitydragon.localhost`)"
+      - "traefik.http.routers.frontend-main.service=frontend-main-dragoncore"
+      - "traefik.http.routers.frontend-main.middlewares=www-redirect@docker"
+      - "traefik.http.services.frontend-main-dragoncore.loadbalancer.server.port=8080"
+      # Developer nuxt app
+      - "traefik.http.routers.frontend-developer.rule=Host(`developer.communitydragon.localhost`)"
+      - "traefik.http.routers.frontend-developer.service=frontend-developer-dragoncore"
+      - "traefik.http.services.frontend-developer-dragoncore.loadbalancer.server.port=8081"
+
+
+  ## PROXY
+  proxy:
+    image: traefik:v2.2
+    command:
+    #### Settings for traefik
+      ## API
+      - --api.dashboard=true                              # enables the traefik dashboard
+      - --api.debug=true                                  # enables extra debugging
+      ## LOG
+      - --accesslog=true                                  # enable access logs
+      - --log.level=DEBUG                                 # sets the log level to debug mode
+      ## PROVIDER
+      - --providers.docker=true                           # sets the proxy provider to docker
+      - --providers.docker.exposedbydefault=false         # sets to only listen to containers that are exposed
+      - --providers.file.filename=/traefik/config.yml     # dynamic configuration file
+      - --providers.docker.network=core-web-dev           # uses the core-web-dev network
+      ## ENTRYPOINTS
+      - --entrypoints.http.address=:80                    # sets the unsecured http address to :80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./build/dev/traefik:/traefik
+    ports:
+      - 80:80
+    networks:
+      - core-web-dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.proxy.rule=Host(`traefik.communitydragon.localhost`)"
+      - "traefik.http.routers.proxy.service=api@internal"
+
+networks:
+  core-web-dev:
+    driver: bridge

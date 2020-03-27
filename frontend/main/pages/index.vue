@@ -3,7 +3,7 @@
     <div>
       <logo />
       <h1 class="title">
-        dragon-front
+        dragon-front-main
       </h1>
       <h2 class="subtitle">
         CommunityDragon Front-End
