@@ -12,11 +12,13 @@ ROOT
  ├─ .external/          # External repositories
  ├─ build/              # All build files for CI/CD and local development
  ├─ frontend/           # All front-end libraries and projects
-     ├─ main/           # Main front-end using Nuxt
-     ├─ auth/           # Authentication front-end using plain Vue
-     └─ developer/      # Developer front-end using Nuxt
+ │   ├─ main/           # Main front-end using Nuxt
+ │   ├─ auth/           # Authentication front-end using plain Vue
+ │   └─ developer/      # Developer front-end using Nuxt
+ │
  ├─ lib/                # The API library
-     ├─ models/         # The API models
+ │   └─ models/         # The API models
+ │
  ├─ modules/            # The API is split up in modules, this is the directory for it
  ├─ ...
  ├─ lerna.json          # Lerna configuration for managing all front-end projects
