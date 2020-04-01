@@ -3,4 +3,5 @@
 /.env
 /.air
 
+yarn-error.log
 .DS_Store

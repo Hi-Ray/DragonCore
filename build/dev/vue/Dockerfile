@@ -11,4 +11,4 @@ RUN chmod +x /usr/local/bin/lerna-start
 WORKDIR /app
 
 # run lerna-start
-CMD ["lerna-start"]
+ENTRYPOINT ["lerna-start"]

@@ -7,20 +7,24 @@ services:
     volumes:
       - .:/app
     networks:
-      - core-web-dev
+      - web-dev
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=dragoncore_web-dev"
       - "traefik.http.routers.api.rule=Host(`api.communitydragon.localhost`)"
+      - "traefik.http.services.api-dragoncore.loadbalancer.server.port=80"
 
-  ## FRONTEND
-  frontend:
-    build: build/dev/frontend
+  ## FRONTEND MAIN
+  frontend-main:
+    build: build/dev/vue
+    command: --scope=frontend-main-dragoncore
     volumes:
       - .:/app
     networks:
-      - core-web-dev
+      - web-dev
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=dragoncore_web-dev"
       # Redirect www
       - "traefik.http.middlewares.www-redirect.redirectregex.regex=^http://communitydragon.localhost/(.*)"
       - "traefik.http.middlewares.www-redirect.redirectregex.replacement=http://www.communitydragon.localhost/$${1}"
@@ -30,11 +34,39 @@ services:
       - "traefik.http.routers.frontend-main.service=frontend-main-dragoncore"
       - "traefik.http.routers.frontend-main.middlewares=www-redirect@docker"
       - "traefik.http.services.frontend-main-dragoncore.loadbalancer.server.port=8080"
+
+  ## FRONTEND DEVELOPER
+  frontend-developer:
+    build: build/dev/vue
+    command: --scope=frontend-developer-dragoncore
+    volumes:
+      - .:/app
+    networks:
+      - web-dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dragoncore_web-dev"
       # Developer nuxt app
       - "traefik.http.routers.frontend-developer.rule=Host(`developer.communitydragon.localhost`)"
       - "traefik.http.routers.frontend-developer.service=frontend-developer-dragoncore"
       - "traefik.http.services.frontend-developer-dragoncore.loadbalancer.server.port=8081"
 
+
+  ## FRONTEND DEVELOPER
+  frontend-auth:
+    build: build/dev/vue
+    command: --scope=frontend-auth-dragoncore
+    volumes:
+      - .:/app
+    networks:
+      - web-dev
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=dragoncore_web-dev"
+      # Auth vue app
+      - "traefik.http.routers.frontend-auth.rule=Host(`auth.communitydragon.localhost`)"
+      - "traefik.http.routers.frontend-auth.service=frontend-auth-dragoncore"
+      - "traefik.http.services.frontend-auth-dragoncore.loadbalancer.server.port=8082"
 
   ## PROXY
   proxy:
@@ -51,7 +83,7 @@ services:
       - --providers.docker=true                           # sets the proxy provider to docker
       - --providers.docker.exposedbydefault=false         # sets to only listen to containers that are exposed
       - --providers.file.filename=/traefik/config.yml     # dynamic configuration file
-      - --providers.docker.network=core-web-dev           # uses the core-web-dev network
+      - --providers.docker.network=dragoncore_web-dev     # uses the dragoncore_web-dev network
       ## ENTRYPOINTS
       - --entrypoints.http.address=:80                    # sets the unsecured http address to :80
     volumes:
@@ -60,12 +92,20 @@ services:
     ports:
       - 80:80
     networks:
-      - core-web-dev
+      web-dev:
+        aliases:
+          - communitydragon.localhost
+          - www.communitydragon.localhost
+          - api.communitydragon.localhost
+          - auth.communitydragon.localhost
+          - traefik.communitydragon.localhost
+          - developer.communitydragon.localhost
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=dragoncore_web-dev"
       - "traefik.http.routers.proxy.rule=Host(`traefik.communitydragon.localhost`)"
       - "traefik.http.routers.proxy.service=api@internal"
 
 networks:
-  core-web-dev:
+  web-dev:
     driver: bridge
