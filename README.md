@@ -1,12 +1,10 @@
 # DragonCore
-
 DragonCore is a hub for CommunityDragon.
 Everything related to CommunityDragon will be interlinked with DragonCore
 
 &nbsp;
 
 ## Structure
-
 ```
 ROOT
  ├─ .external/          # External repositories
@@ -29,8 +27,7 @@ ROOT
 
 &nbsp;
 
-## Requirements
-
+## Prerequisites
 - [Go 1.14+](https://golang.org/) (optional)
 - [Node 12+](https://nodejs.org/en/) (optional)
   - [Yarn](https://yarnpkg.com/)
@@ -45,10 +42,18 @@ to use Yarn.
 &nbsp;
 
 ## Setup
-
 ### Development
-
-All docker files are set up, all you need to do is start up the containers using docker-compose and the proper target file.
+We also use a proxy in development mode, so you'll need to set some /etc/hosts values
+in order to be able to have access to all the projects. Copy and paste the following values:
+```
+127.0.0.1  developer.communitydragon.localhost
+127.0.0.1    traefik.communitydragon.localhost
+127.0.0.1       auth.communitydragon.localhost
+127.0.0.1        www.communitydragon.localhost
+127.0.0.1        api.communitydragon.localhost
+127.0.0.1            communitydragon.localhost
+```
+Everything is set up in docker. All you need to do is start up the containers using docker-compose.
 ```bash
 docker-compose up
 ```
@@ -68,7 +73,7 @@ you want to run production yourself)
 ```bash
 docker-compose up -f docker-compose.build.yml
 ```
-You can now spin up the production images
+You can now spin up the production images with the production docker-compose configuration file.
 ```bash
 docker-compose up -f docker-compose.prod.yml -d
 ```
