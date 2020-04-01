@@ -24,7 +24,7 @@ ROOT
  ├─ lerna.json          # Lerna configuration for managing all front-end projects
  ├─ package.json        # Global NPM dependencies for all front-end projects
  ├─ go.mod              # Dependencies of the API
- ├─ main.go             # Entrypoint of the API
+ └─ main.go             # Entrypoint of the API
 ```
 
 &nbsp;
